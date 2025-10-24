@@ -3,7 +3,8 @@ import Panel from '@/components/Panel';
 import { getServerComponentClient } from '@/lib/supabaseServer';
 import ChangeUsernameForm from './ChangeUsernameForm';
 import { USERNAME_CHANGE_COOLDOWN_DAYS } from '@/lib/constants';
-import { changeUsernameAction, signOutAction } from '../actions';
+import { changeUsernameAction } from './actions';
+import { signOutAction } from '../actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
