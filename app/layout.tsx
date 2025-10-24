@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { IBM_Plex_Mono, Inter } from 'next/font/google';
-import Sidebar from '@/components/Sidebar';
 import './globals.css';
 
 const inter = Inter({
@@ -30,10 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${plexMono.variable}`} suppressHydrationWarning>
-      <body className="bg-[#111111] font-sans text-[#d9d9d9] antialiased">
-        <Sidebar />
-        <div className="min-h-screen md:ml-56">{children}</div>
-      </body>
+      <body className="min-h-screen bg-[#111111] font-sans text-[#d9d9d9] antialiased">{children}</body>
     </html>
   );
 }
