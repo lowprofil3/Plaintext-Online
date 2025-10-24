@@ -48,15 +48,17 @@ export async function changeUsernameAction(_: ActionState, formData: FormData): 
     };
   }
 
-  const { data: conflictingPlayer, error: conflictError } = await supabase
+  const { data: conflictingPlayers, error: conflictError } = await supabase
     .from('players')
     .select('id')
     .eq('username', requestedUsername)
-    .maybeSingle();
+    .limit(1);
 
   if (conflictError) {
     return { error: conflictError.message };
   }
+
+  const conflictingPlayer = conflictingPlayers?.[0];
 
   if (conflictingPlayer && conflictingPlayer.id !== player.id) {
     return { error: 'That username is already taken.' };
