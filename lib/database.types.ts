@@ -118,6 +118,7 @@ export type Database = {
           id: string;
           user_id: string;
           username: string;
+          username_changed_at: string;
           stats: Json;
           regeneration: Json | null;
           assets: Json | null;
@@ -128,6 +129,7 @@ export type Database = {
           id?: string;
           user_id: string;
           username: string;
+          username_changed_at?: string;
           stats?: Json;
           regeneration?: Json | null;
           assets?: Json | null;
@@ -138,6 +140,7 @@ export type Database = {
           id?: string;
           user_id?: string;
           username?: string;
+          username_changed_at?: string;
           stats?: Json;
           regeneration?: Json | null;
           assets?: Json | null;

@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import Panel from '@/components/Panel';
 import { getServerComponentClient } from '@/lib/supabaseServer';
-import { signOutAction } from '../actions';
+import ChangeUsernameForm from './ChangeUsernameForm';
+import { changeUsernameAction, signOutAction, USERNAME_CHANGE_COOLDOWN_DAYS } from '../actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -18,9 +19,13 @@ export default async function SettingsPage() {
 
   const { data: player } = await supabase
     .from('players')
-    .select('username, created_at, stats')
+    .select('username, created_at, stats, username_changed_at')
     .eq('user_id', user.id)
     .maybeSingle();
+
+  const usernameCooldownEndsAt = player?.username_changed_at
+    ? new Date(new Date(player.username_changed_at).getTime() + USERNAME_CHANGE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000).toISOString()
+    : null;
 
   return (
     <div className="space-y-8">
@@ -49,6 +54,17 @@ export default async function SettingsPage() {
             </dd>
           </div>
         </dl>
+      </Panel>
+
+      <Panel title="Identity">
+        <p className="text-sm leading-relaxed text-[#9a9a9a]">
+          Update your operator handle. Changes propagate across jobs, markets, and messages but are limited to once every 10 days to protect identity continuity.
+        </p>
+        <ChangeUsernameForm
+          action={changeUsernameAction}
+          currentUsername={player?.username}
+          cooldownEndsAt={usernameCooldownEndsAt}
+        />
       </Panel>
 
       <Panel title="Session">
