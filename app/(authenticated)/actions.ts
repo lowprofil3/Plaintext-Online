@@ -178,11 +178,9 @@ export async function changeUsernameAction(_: ActionState, formData: FormData): 
     return { error: authError.message };
   }
 
-  const nowIso = new Date().toISOString();
-  const { error: updateError } = await supabase
-    .from('players')
-    .update({ username: requestedUsername, username_changed_at: nowIso, updated_at: nowIso })
-    .eq('id', player.id);
+  const { error: updateError } = await supabase.rpc('game.update_username', {
+    p_new_username: requestedUsername,
+  });
 
   if (updateError) {
     await supabase.auth.updateUser({ data: { username: player.username } }).catch(() => undefined);

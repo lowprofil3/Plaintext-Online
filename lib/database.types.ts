@@ -192,6 +192,12 @@ export type Database = {
         };
         Returns: unknown;
       };
+      'game.update_username': {
+        Args: {
+          p_new_username: string;
+        };
+        Returns: unknown;
+      };
     };
   };
 };
