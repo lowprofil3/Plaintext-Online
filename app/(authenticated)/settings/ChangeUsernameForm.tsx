@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import type { ActionState } from '@/lib/actionState';
+import { USERNAME_CHANGE_COOLDOWN_DAYS } from '@/lib/constants';
 
 const INITIAL_STATE: ActionState = {};
 
@@ -31,21 +32,14 @@ export default function ChangeUsernameForm({ action, currentUsername, cooldownEn
   const [state, formAction] = useFormState(action, INITIAL_STATE);
 
   const { cooldownActive, cooldownMessage } = useMemo(() => {
-    if (!cooldownEndsAt) {
-      return { cooldownActive: false, cooldownMessage: null as string | null };
-    }
+    if (!cooldownEndsAt) return { cooldownActive: false, cooldownMessage: null as string | null };
 
     const endDate = new Date(cooldownEndsAt);
-    if (Number.isNaN(endDate.getTime())) {
-      return { cooldownActive: false, cooldownMessage: null as string | null };
-    }
+    if (Number.isNaN(endDate.getTime())) return { cooldownActive: false, cooldownMessage: null as string | null };
 
     const now = new Date();
     const remainingMs = endDate.getTime() - now.getTime();
-
-    if (remainingMs <= 0) {
-      return { cooldownActive: false, cooldownMessage: null as string | null };
-    }
+    if (remainingMs <= 0) return { cooldownActive: false, cooldownMessage: null as string | null };
 
     const remainingDays = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
     const formattedEnd = endDate.toLocaleString();
@@ -74,7 +68,7 @@ export default function ChangeUsernameForm({ action, currentUsername, cooldownEn
       {state?.error ? <p className="text-sm text-red-400">{state.error}</p> : null}
       {state?.success ? <p className="text-sm text-[#009966]">{state.success}</p> : null}
       <p className="text-xs uppercase tracking-[0.3em] text-[#9a9a9a]">
-        Usernames can be updated every 10 days to maintain identity continuity across the city.
+        Usernames can be updated every {USERNAME_CHANGE_COOLDOWN_DAYS} days to maintain identity continuity across the city.
       </p>
     </form>
   );
