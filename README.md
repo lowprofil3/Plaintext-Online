@@ -2,12 +2,10 @@
 
 PlainText Online is a text-forward massively multiplayer RPG set in a persistent, modern city. The world operates like a living terminal — players clock in to jobs, grind reputation, build up assets, and chatter in plaintext.
 
-This repository currently houses a lightweight prototype of the core backend concepts:
+This repository now contains two complementary experiences:
 
-- Username + password authentication handled by Supabase.
-- Automatic player provisioning with starting cash, stats, and assets.
-- Deterministic stat regeneration for energy and focus over real-world time.
-- A TypeScript foundation ready to wire into a terminal-inspired UI or API layer.
+- **Next.js web client** that visualises the operator dashboard in a sleek terminal-inspired interface.
+- **Domain + services layer** that models players, assets, and stat regeneration while wiring into Supabase for persistence.
 
 ## Getting started
 
@@ -17,30 +15,47 @@ This repository currently houses a lightweight prototype of the core backend con
    npm install
    ```
 
-2. Provide Supabase credentials (needed for live auth and persistence):
+2. Launch the Next.js development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Visit [http://localhost:3000](http://localhost:3000) to explore the City Operations Dashboard mock.
+
+3. Provide Supabase credentials when you are ready to exercise live auth and persistence:
 
    ```bash
    export SUPABASE_URL=your-project-url
    export SUPABASE_ANON_KEY=your-anon-key
    ```
 
-3. Explore the prototype via the CLI bootstrapper:
-
-   ```bash
-   npm start
-   ```
-
-   The script logs starting stats for a new citizen and simulates stat regeneration after downtime. When Supabase credentials are present it also exposes helper methods for registering, logging in, and fetching player profiles.
-
-4. Run the Vitest-powered unit suite:
+4. Run the domain unit tests to keep the regeneration loop honest:
 
    ```bash
    npm test
    ```
 
-   Tests cover the player factory helpers, persistence mapping, and the stat regeneration logic to protect against regressions while the domain evolves.
+5. (Optional) Inspect the CLI bootstrapper for raw domain output:
+
+   ```bash
+   npm run cli
+   ```
+
+   The script logs starting stats for a new citizen and simulates stat regeneration after downtime. When Supabase credentials are present it also exposes helper methods for registering, logging in, and fetching player profiles.
 
 ## Core systems
+
+### Operator dashboard prototype
+
+The landing page showcases how the MMO can surface real-time context in plaintext:
+
+- **Stats panel** mirrors the live energy and focus regeneration schedule using the shared domain service.
+- **City feed** communicates economic and social shifts across the metropolis.
+- **Objectives & assets** keep players focused on their routine and holdings.
+- **Command log** hints at the eventual command-driven interaction model.
+
+Tailwind CSS powers the neon terminal aesthetic while Next.js server components pull in the shared domain logic.
 
 ### Player profile blueprint
 
@@ -75,6 +90,6 @@ Provision a `players` table in Supabase using the SQL snippet in [`supabase/sche
 
 ## Next steps
 
-- Build a terminal-inspired UI that consumes the player and session services.
+- Flesh out authentication flows in the Next.js app using the Supabase client.
 - Layer in job systems, commerce, and social features using the same domain-first approach.
-- Add automated tests once the domain stabilises.
+- Expand automated tests to cover Supabase adapters and future gameplay systems.
