@@ -17,6 +17,7 @@ describe('createStartingPlayer', () => {
     });
     expect(player.assets[0]).not.toBe(SMALL_APARTMENT);
     expect(player.regeneration.energyLastTickAt).toBe(player.regeneration.focusLastTickAt);
+    expect(player.usernameChangedAt).toBe(player.createdAt);
     expect(player.createdAt).toBe(player.updatedAt);
   });
 });
