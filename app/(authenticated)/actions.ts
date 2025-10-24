@@ -6,8 +6,7 @@ import { redirect } from 'next/navigation';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import type { Database } from '@/lib/database.types';
 import type { ActionState } from '@/lib/actionState';
-
-export const USERNAME_CHANGE_COOLDOWN_DAYS = 10;
+import { USERNAME_CHANGE_COOLDOWN_DAYS } from '@/lib/constants';
 const USERNAME_COOLDOWN_MS = USERNAME_CHANGE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
 
 export async function workJobAction(_: ActionState, formData: FormData): Promise<ActionState> {
