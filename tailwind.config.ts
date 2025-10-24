@@ -4,26 +4,28 @@ const config: Config = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
-    './src/**/*.{js,ts,jsx,tsx}'
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        terminal: {
-          background: '#0a0f0d',
-          surface: '#0f1714',
-          primary: '#5af78e',
-          accent: '#5ad1f7',
-          warning: '#f7d65a',
-        }
+        canvas: {
+          base: '#111111',
+          surface: '#161616',
+          border: '#2a2a2a',
+          text: '#d9d9d9',
+          muted: '#9a9a9a',
+          accent: '#009966',
+        },
       },
       fontFamily: {
-        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-plex-mono)', 'IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
-      boxShadow: {
-        glow: '0 0 60px rgba(90, 247, 142, 0.12)',
-      }
-    }
+      letterSpacing: {
+        widest: '0.35em',
+      },
+    },
   },
   plugins: [],
 };
