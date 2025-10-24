@@ -32,21 +32,14 @@ export default function ChangeUsernameForm({ action, currentUsername, cooldownEn
   const [state, formAction] = useFormState(action, INITIAL_STATE);
 
   const { cooldownActive, cooldownMessage } = useMemo(() => {
-    if (!cooldownEndsAt) {
-      return { cooldownActive: false, cooldownMessage: null as string | null };
-    }
+    if (!cooldownEndsAt) return { cooldownActive: false, cooldownMessage: null as string | null };
 
     const endDate = new Date(cooldownEndsAt);
-    if (Number.isNaN(endDate.getTime())) {
-      return { cooldownActive: false, cooldownMessage: null as string | null };
-    }
+    if (Number.isNaN(endDate.getTime())) return { cooldownActive: false, cooldownMessage: null as string | null };
 
     const now = new Date();
     const remainingMs = endDate.getTime() - now.getTime();
-
-    if (remainingMs <= 0) {
-      return { cooldownActive: false, cooldownMessage: null as string | null };
-    }
+    if (remainingMs <= 0) return { cooldownActive: false, cooldownMessage: null as string | null };
 
     const remainingDays = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
     const formattedEnd = endDate.toLocaleString();

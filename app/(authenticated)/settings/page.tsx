@@ -26,7 +26,10 @@ export default async function SettingsPage() {
     .maybeSingle();
 
   const usernameCooldownEndsAt = player?.username_changed_at
-    ? new Date(new Date(player.username_changed_at).getTime() + USERNAME_CHANGE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000).toISOString()
+    ? new Date(
+        new Date(player.username_changed_at).getTime() +
+          USERNAME_CHANGE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000
+      ).toISOString()
     : null;
 
   return (
@@ -52,7 +55,9 @@ export default async function SettingsPage() {
           <div>
             <dt className="text-[11px] uppercase tracking-[0.35em] text-[#9a9a9a]">Joined</dt>
             <dd className="mt-2 font-mono">
-              {player?.created_at ? new Date(player.created_at).toLocaleString() : 'Unknown'}
+              {player?.created_at
+                ? new Date(player.created_at).toLocaleString()
+                : 'Unknown'}
             </dd>
           </div>
         </dl>
@@ -60,7 +65,8 @@ export default async function SettingsPage() {
 
       <Panel title="Identity">
         <p className="text-sm leading-relaxed text-[#9a9a9a]">
-          Update your operator handle. Changes propagate across jobs, markets, and messages but are limited to once every 10 days to protect identity continuity.
+          Update your operator handle. Changes propagate across jobs, markets, and messages but are
+          limited to once every {USERNAME_CHANGE_COOLDOWN_DAYS} days to protect identity continuity.
         </p>
         <ChangeUsernameForm
           action={changeUsernameAction}
