@@ -32,6 +32,14 @@ This repository currently houses a lightweight prototype of the core backend con
 
    The script logs starting stats for a new citizen and simulates stat regeneration after downtime. When Supabase credentials are present it also exposes helper methods for registering, logging in, and fetching player profiles.
 
+4. Run the Vitest-powered unit suite:
+
+   ```bash
+   npm test
+   ```
+
+   Tests cover the player factory helpers, persistence mapping, and the stat regeneration logic to protect against regressions while the domain evolves.
+
 ## Core systems
 
 ### Player profile blueprint
@@ -60,6 +68,10 @@ Regeneration happens lazily — whenever a profile is loaded the `StatRegenerati
 ### Authentication approach
 
 Supabase requires an email field for password auth. To keep the UX purely username-driven, the `PlayerService` synthesises an email (`<username>@players.plaintext-online.local`) that is never exposed to the player. Metadata persists the canonical username, enabling terminal-style login prompts while using Supabase's secure credential storage.
+
+### Database schema
+
+Provision a `players` table in Supabase using the SQL snippet in [`supabase/schema.sql`](supabase/schema.sql). The JSONB columns allow the prototype to evolve quickly without migrations while the domain model is still in flux.
 
 ## Next steps
 

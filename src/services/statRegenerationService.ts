@@ -67,17 +67,18 @@ export class StatRegenerationService {
     const elapsedMinutes = minutesBetween(lastTick, referenceDate);
     const ticks = Math.floor(elapsedMinutes / rate.intervalMinutes);
 
-    if (ticks <= 0 || currentValue >= maxValue) {
+    if (ticks <= 0) {
+      const baseTime = currentValue >= maxValue ? referenceDate : lastTick;
       return {
         updatedPlayer: player,
         amountGained: 0,
-        nextTick: new Date(lastTick.getTime() + rate.intervalMinutes * 60 * 1000),
+        nextTick: new Date(baseTime.getTime() + rate.intervalMinutes * 60 * 1000),
       };
     }
 
     const amountGained = clamp(ticks * rate.amountPerTick, 0, maxValue - currentValue);
     const nextTickTime = new Date(
-      lastTick.getTime() + (ticks + 1) * rate.intervalMinutes * 60 * 1000,
+      referenceDate.getTime() + rate.intervalMinutes * 60 * 1000,
     );
 
     const regenKey = `${rate.stat}LastTickAt` as keyof RegenerationState;

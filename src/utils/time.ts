@@ -1,5 +1,5 @@
 export function minutesBetween(earlier: Date, later: Date): number {
-  return (later.getTime() - earlier.getTime()) / 1000 / 60;
+  return Math.max(0, (later.getTime() - earlier.getTime()) / 1000 / 60);
 }
 
 export function clamp(value: number, min: number, max: number): number {

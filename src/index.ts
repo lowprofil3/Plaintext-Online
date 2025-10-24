@@ -41,6 +41,8 @@ async function main() {
     'Energy gained': regenResult.energyGained,
     'Focus gained': regenResult.focusGained,
   });
+  console.log('Next energy tick at:', regenResult.nextEnergyTickAt.toLocaleTimeString());
+  console.log('Next focus tick at:', regenResult.nextFocusTickAt.toLocaleTimeString());
 
   if (supabase) {
     console.log('\nPlayer service API (example usage only):');

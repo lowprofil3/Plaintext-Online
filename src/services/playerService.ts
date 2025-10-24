@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { createStartingPlayer } from '../domain/player';
 import type { Player } from '../domain/player';
+import { toPlayer, toPlayerRow, toPlayerUpdate, type PlayerRow } from '../domain/playerPersistence';
 import { StatRegenerationService } from './statRegenerationService';
 
 const SYNTHETIC_EMAIL_DOMAIN = 'players.plaintext-online.local';
@@ -35,17 +36,15 @@ export class PlayerService {
       throw new Error(`Unable to register player: ${signUpResult.error.message}`);
     }
 
+    const user = signUpResult.data.user;
+    if (!user) {
+      throw new Error('Supabase did not return a user record during registration.');
+    }
+
     const playerProfile = createStartingPlayer(username);
-    const { error: profileError } = await this.supabase.from('players').insert({
-      id: playerProfile.id,
-      user_id: signUpResult.data.user?.id,
-      username: playerProfile.username,
-      stats: playerProfile.stats,
-      regeneration: playerProfile.regeneration,
-      assets: playerProfile.assets,
-      created_at: playerProfile.createdAt,
-      updated_at: playerProfile.updatedAt,
-    });
+    const { error: profileError } = await this.supabase
+      .from('players')
+      .insert(toPlayerRow(playerProfile, user.id));
 
     if (profileError) {
       throw new Error(`Unable to create player profile: ${profileError.message}`);
@@ -53,7 +52,7 @@ export class PlayerService {
 
     return {
       player: playerProfile,
-      userId: signUpResult.data.user!.id,
+      userId: user.id,
     };
   }
 
@@ -78,23 +77,24 @@ export class PlayerService {
       throw new Error(`Unable to load player profile: ${error.message}`);
     }
 
-    const regenerationResult = this.regenerationService.applyRegeneration(data as Player);
+    if (!data) {
+      throw new Error('Player profile was not found.');
+    }
+
+    const player = toPlayer(data as PlayerRow);
+    const regenerationResult = this.regenerationService.applyRegeneration(player);
     if (regenerationResult.energyGained > 0 || regenerationResult.focusGained > 0) {
       await this.persistRegeneration(regenerationResult.updatedPlayer);
       return regenerationResult.updatedPlayer;
     }
 
-    return data as Player;
+    return player;
   }
 
   private async persistRegeneration(player: Player) {
     const { error } = await this.supabase
       .from('players')
-      .update({
-        stats: player.stats,
-        regeneration: player.regeneration,
-        updated_at: player.updatedAt,
-      })
+      .update(toPlayerUpdate(player))
       .eq('id', player.id);
 
     if (error) {
