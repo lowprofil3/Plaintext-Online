@@ -16,6 +16,7 @@ export interface RegenerationState {
 export interface Player {
   id: string;
   username: string;
+  usernameChangedAt: string;
   stats: PlayerStats;
   assets: PlayerAsset[];
   regeneration: RegenerationState;
@@ -44,6 +45,7 @@ export function createStartingPlayer(username: string): Player {
   return {
     id: crypto.randomUUID(),
     username,
+    usernameChangedAt: now,
     stats: { ...STARTING_PLAYER_STATS },
     assets: [apartment],
     regeneration: {

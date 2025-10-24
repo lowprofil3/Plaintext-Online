@@ -4,6 +4,7 @@ export interface PlayerRow {
   id: string;
   user_id: string;
   username: string;
+  username_changed_at: string;
   stats: Player['stats'];
   regeneration: Player['regeneration'];
   assets: Player['assets'];
@@ -17,6 +18,7 @@ export function toPlayer(row: PlayerRow): Player {
   return {
     id: row.id,
     username: row.username,
+    usernameChangedAt: row.username_changed_at,
     stats: { ...row.stats },
     assets: row.assets.map((asset) => ({ ...asset })),
     regeneration: { ...row.regeneration },
@@ -30,6 +32,7 @@ export function toPlayerRow(player: Player, userId: string): PlayerRow {
     id: player.id,
     user_id: userId,
     username: player.username,
+    username_changed_at: player.usernameChangedAt,
     stats: { ...player.stats },
     regeneration: { ...player.regeneration },
     assets: player.assets.map((asset) => ({ ...asset })),

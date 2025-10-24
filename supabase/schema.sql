@@ -2,6 +2,7 @@ create table if not exists public.players (
   id uuid primary key,
   user_id uuid references auth.users (id) on delete cascade,
   username text not null unique,
+  username_changed_at timestamptz not null default now(),
   stats jsonb not null,
   regeneration jsonb not null,
   assets jsonb not null,
