@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import type { Database } from '@/lib/database.types';
 import type { ActionState } from '@/lib/actionState';
+
 export async function workJobAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const jobId = formData.get('job_id')?.toString();
 
