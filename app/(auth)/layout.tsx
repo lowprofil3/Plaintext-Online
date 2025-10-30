@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+export const runtime = 'nodejs';
+
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#111111] px-6 py-12 text-[#d9d9d9]">

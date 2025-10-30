@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Sidebar from '@/components/Sidebar';
 
+export const runtime = 'nodejs';
+
 const navLinks = [
   { name: 'Dashboard', href: '/dashboard' },
   { name: 'Jobs', href: '/jobs' },

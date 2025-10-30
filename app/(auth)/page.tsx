@@ -6,6 +6,7 @@ import { AuthForm, type AuthState } from './AuthForm';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const runtime = 'nodejs';
 
 const signIn = async (_: AuthState, formData: FormData): Promise<AuthState> => {
   'use server';
