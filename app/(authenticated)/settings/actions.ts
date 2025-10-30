@@ -29,7 +29,9 @@ export async function changeUsernameAction(_: ActionState, formData: FormData): 
     .from('players')
     .select('id, username, username_changed_at')
     .eq('user_id', user.id)
-    .single();
+    .order('username_changed_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   if (playerError || !player) {
     return { error: playerError?.message ?? 'Player profile not found.' };
