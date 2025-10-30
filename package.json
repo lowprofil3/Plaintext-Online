@@ -10,7 +10,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit -p tsconfig.game.json",
     "test": "vitest run",
-    "cli": "ts-node src/index.ts"
+    "cli": "ts-node --project tsconfig.game.json src/index.ts"
   },
   "keywords": [
     "mmorpg",
