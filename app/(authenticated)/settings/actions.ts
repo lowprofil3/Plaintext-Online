@@ -11,44 +11,29 @@ const USERNAME_COOLDOWN_MS = USERNAME_CHANGE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000
 
 export async function changeUsernameAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const requestedUsername = formData.get('username')?.toString().trim();
-
-  if (!requestedUsername) {
-    return { error: 'Username is required.' };
-  }
+  if (!requestedUsername) return { error: 'Username is required.' };
 
   const supabase = createServerActionClient<Database>({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'You must be signed in.' };
 
-  if (!user) {
-    return { error: 'You must be signed in.' };
-  }
-
-  const { data: players, error: playerError } = await supabase
+  const { data: player, error: playerError } = await supabase
     .from('players')
     .select('id, username, username_changed_at')
     .eq('user_id', user.id)
     .order('username_changed_at', { ascending: false })
-    .limit(1);
+    .limit(1)
+    .maybeSingle();
 
-  const player = players?.[0];
+  if (playerError || !player) return { error: playerError?.message ?? 'Player profile not found.' };
 
-  if (playerError || !player) {
-    return { error: playerError?.message ?? 'Player profile not found.' };
-  }
-
-  if (player.username === requestedUsername) {
-    return { error: 'Choose a different username.' };
-  }
+  if (player.username === requestedUsername) return { error: 'Choose a different username.' };
 
   const lastChangedAt = new Date(player.username_changed_at);
   const cooldownEndsAt = new Date(lastChangedAt.getTime() + USERNAME_COOLDOWN_MS);
 
   if (cooldownEndsAt.getTime() > Date.now()) {
-    return {
-      error: `Username can be updated again on ${cooldownEndsAt.toLocaleString()}.`,
-    };
+    return { error: `Username can be updated again on ${cooldownEndsAt.toLocaleString()}.` };
   }
 
   const { data: conflictingPlayers, error: conflictError } = await supabase
@@ -57,21 +42,15 @@ export async function changeUsernameAction(_: ActionState, formData: FormData): 
     .eq('username', requestedUsername)
     .limit(1);
 
-  if (conflictError) {
-    return { error: conflictError.message };
-  }
+  if (conflictError) return { error: conflictError.message };
 
   const conflictingPlayer = conflictingPlayers?.[0];
-
   if (conflictingPlayer && conflictingPlayer.id !== player.id) {
     return { error: 'That username is already taken.' };
   }
 
   const { error: authError } = await supabase.auth.updateUser({ data: { username: requestedUsername } });
-
-  if (authError) {
-    return { error: authError.message };
-  }
+  if (authError) return { error: authError.message };
 
   const nowIso = new Date().toISOString();
   const { error: updateError } = await supabase
