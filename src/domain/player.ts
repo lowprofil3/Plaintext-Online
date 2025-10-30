@@ -25,10 +25,10 @@ export interface Player {
 }
 
 export const STARTING_PLAYER_STATS: PlayerStats = {
-  energy: 50,
-  focus: 50,
-  reputation: 0,
-  cash: 200,
+  energy: 100,
+  focus: 100,
+  reputation: 100,
+  cash: 100,
 };
 
 export function createStartingPlayer(username: string): Player {
